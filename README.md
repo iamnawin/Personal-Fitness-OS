@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Fitness OS (PFOS)
+
+A client-side personal fitness planning app. Rule-based coach generates weekly plans, users browse 1,324 exercises, build custom workouts, execute sessions with a rest timer, and track progress — all in the browser with no backend.
+
+## Tech Stack
+
+- Next.js 14 (App Router)
+- TypeScript (strict)
+- Tailwind CSS
+- localStorage persistence
+- pnpm
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build
+```
 
-## Learn More
+Static export compatible. Deploy to Vercel or Netlify with zero config.
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Onboarding** — goal, level, days/week, session length, location
+- **Equipment Selection** — choose available gear
+- **PFOS Coach** — rule-based weekly plan generator (no AI)
+- **Exercise Library** — 1,324 exercises with search, filters, GIF demos
+- **Exercise Detail** — media viewer, layman explanation, tips
+- **Workout Builder** — create custom workouts from the full library
+- **Active Workout** — set completion, rest timer, progress bar, media preview
+- **Progress** — streak tracking, workout history, plan adherence, weekly stats
+- **PWA** — installable with manifest and icons
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Known Limitations
 
-## Deploy on Vercel
+- Exercise pages bundle ~800KB (full JSON client-side); optimize with code-splitting or remote API later
+- GIF demos depend on external GitHub raw URLs (may be slow/unavailable)
+- Coach plan generation is rule-based with limited exercise variety
+- No drag-drop reorder in workout builder yet
+- No backend, no auth, no sync — localStorage only
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Dataset
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Exercise data sourced from [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) (1,324 exercises with GIF URLs, body parts, targets, instructions).
+
+## Branding
+
+All product naming is controlled by `src/lib/brand.ts`. To rename the app, edit that single file. Current branding is placeholder.
+
+## Future
+
+- Category-first exercise browsing
+- Search synonyms for common terms
+- Varied coach plan logic per day
+- Code-split exercise data
+- Remote dataset / indexed search
+- Export/import data
+- Richer progress analytics

@@ -1,3 +1,6 @@
+// TODO: Bundle optimization — exercises.json (~6.5MB) is bundled client-side (~800KB gzipped).
+// Future options: code-splitting, lazy loading, indexed search (e.g. Fuse.js),
+// remote dataset via API, or static generation with search index.
 import rawExercises from "@/data/exercises.json";
 import { Exercise } from "./types";
 
