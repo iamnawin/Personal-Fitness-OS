@@ -63,6 +63,15 @@ export default function EquipmentPage() {
 
   return (
     <div className="space-y-6">
+      {/* Step indicator */}
+      <div>
+        <div className="flex gap-1 mb-1.5">
+          <div className="h-1 flex-1 rounded-full bg-brand-accent/40" />
+          <div className="h-1 flex-1 rounded-full bg-brand-accent" />
+        </div>
+        <p className="text-xs text-white/40">Step 2 of 2 — Equipment &amp; Focus</p>
+      </div>
+
       <div>
         <h1 className="text-2xl font-bold text-white">Equipment & Preferences</h1>
         <p className="text-sm text-white/60">What do you have available?</p>
