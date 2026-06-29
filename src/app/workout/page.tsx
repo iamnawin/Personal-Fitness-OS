@@ -2,10 +2,12 @@
 
 import { Suspense, useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check, Timer, Trophy } from "lucide-react";
+import { Check, Timer, Trophy, SkipForward } from "lucide-react";
 import { getPlan, getCustomWorkouts, saveLog, updateStreak } from "@/lib/workout-storage";
 import { getExerciseById } from "@/lib/exercise-data";
 import { ExerciseMediaViewer } from "@/components/fitness/ExerciseMediaViewer";
+import { ExerciseThumb } from "@/components/fitness/ExerciseThumb";
+import { getBodyPartLabel } from "@/lib/exercise-enrichment";
 import { WorkoutLog } from "@/lib/types";
 
 type SessionExercise = { exerciseId: string; name: string; sets: number; reps: string; restSeconds: number };
@@ -142,13 +144,37 @@ function WorkoutContent() {
 
       {/* Rest timer */}
       {resting && (
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-brand-electric/30 bg-brand-electric/5 p-4">
-          <Timer className="h-6 w-6 text-brand-electric" />
-          <span className="text-2xl font-bold text-white">{restTime}s</span>
-          <span className="text-xs text-white/40">Rest</span>
-          <button onClick={() => { setResting(false); setRestTime(0); }} className="text-xs text-brand-electric">Skip</button>
+        <div className="flex items-center gap-4 rounded-xl border border-brand-electric/30 bg-brand-electric/5 p-4">
+          <div className="flex flex-col items-center gap-1">
+            <Timer className="h-5 w-5 text-brand-electric" />
+            <span className="text-2xl font-bold text-white">{restTime}s</span>
+          </div>
+          <div className="flex-1">
+            <p className="text-xs text-white/50">Rest between sets</p>
+            <button onClick={() => { setResting(false); setRestTime(0); }} className="mt-1 flex items-center gap-1 text-xs text-brand-electric">
+              <SkipForward className="h-3 w-3" /> Skip
+            </button>
+          </div>
         </div>
       )}
+
+      {/* Next exercise preview */}
+      {allDone && !isLast && (() => {
+        const next = exercises[currentIdx + 1];
+        const nextFull = getExerciseById(next.exerciseId);
+        return (
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-[10px] text-white/40 uppercase mb-2">Up Next</p>
+            <div className="flex items-center gap-3">
+              <ExerciseThumb gifUrl={nextFull?.gifUrl} name={next.name} size="md" />
+              <div>
+                <p className="text-sm text-white/90 capitalize">{next.name}</p>
+                <p className="text-[11px] text-white/40">{getBodyPartLabel(nextFull?.bodyPart || "")} · {next.sets}×{next.reps}</p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Actions */}
       {!resting && !allDone && (

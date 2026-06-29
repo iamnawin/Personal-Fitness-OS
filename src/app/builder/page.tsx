@@ -3,10 +3,11 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2, Save, Search } from "lucide-react";
-import { searchExercises } from "@/lib/exercise-data";
+import { searchExercises, getExerciseById } from "@/lib/exercise-data";
 import { getEquipmentLabel, getMuscleLabel } from "@/lib/exercise-enrichment";
 import { saveCustomWorkout } from "@/lib/workout-storage";
 import { CustomWorkoutItem, Exercise } from "@/lib/types";
+import { ExerciseThumb } from "@/components/fitness/ExerciseThumb";
 
 export default function BuilderPage() {
   const router = useRouter();
@@ -54,8 +55,11 @@ export default function BuilderPage() {
       <div className="space-y-2">
         {items.map((item, idx) => (
           <div key={idx} className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-white capitalize">{item.name}</span>
+            <div className="flex items-center gap-3">
+              <ExerciseThumb gifUrl={getExerciseById(item.exerciseId)?.gifUrl} name={item.name} />
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-medium text-white capitalize truncate block">{item.name}</span>
+              </div>
               <button onClick={() => removeItem(idx)} className="text-red-400/60 hover:text-red-400">
                 <Trash2 className="h-4 w-4" />
               </button>

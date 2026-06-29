@@ -118,3 +118,20 @@ export function getBeginnerExercises(): Exercise[] {
     .filter((ex) => beginnerEquipment.includes(ex.equipment))
     .slice(0, 12);
 }
+
+export function findExerciseByIdOrName(idOrName: string): Exercise | undefined {
+  const found = exercises.find((e) => e.id === idOrName);
+  if (found) return found;
+  const lower = idOrName.toLowerCase();
+  return exercises.find((e) => e.name.toLowerCase() === lower)
+    || exercises.find((e) => e.name.toLowerCase().includes(lower));
+}
+
+export function getExercisesByFilter(filters: { bodyPart?: string; target?: string; equipment?: string[] }): Exercise[] {
+  return exercises.filter((ex) => {
+    if (filters.bodyPart && ex.bodyPart !== filters.bodyPart) return false;
+    if (filters.target && ex.target !== filters.target) return false;
+    if (filters.equipment && !filters.equipment.includes(ex.equipment)) return false;
+    return true;
+  });
+}
