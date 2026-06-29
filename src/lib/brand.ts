@@ -2,8 +2,8 @@ export const brand = {
   productName: "Personal Fitness OS",
   internalName: "PFOS",
   tagline: "A personal workout plan built around you.",
-  logoMode: "placeholder" as const,
-  logoPath: null as string | null,
+  logoMode: "image" as const,
+  logoPath: "/logo.png",
   appDescription:
     "A personal fitness planning system with exercise demos, weekly plans, workout tracking, and progress insights.",
   colors: {

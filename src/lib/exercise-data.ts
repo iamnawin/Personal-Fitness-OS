@@ -68,12 +68,53 @@ export function searchExercises(
   query: string,
   filters: { bodyPart?: string; target?: string; equipment?: string }
 ): Exercise[] {
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
+  const terms = q ? expandSynonyms(q) : [];
+
   return exercises.filter((ex) => {
     if (filters.bodyPart && ex.bodyPart !== filters.bodyPart) return false;
     if (filters.target && ex.target !== filters.target) return false;
     if (filters.equipment && ex.equipment !== filters.equipment) return false;
-    if (q && !ex.name.toLowerCase().includes(q) && !ex.target.toLowerCase().includes(q) && !ex.bodyPart.toLowerCase().includes(q) && !ex.equipment.toLowerCase().includes(q)) return false;
+    if (terms.length > 0) {
+      const hay = `${ex.name} ${ex.bodyPart} ${ex.target} ${ex.equipment} ${ex.secondaryMuscles.join(" ")}`.toLowerCase();
+      return terms.some((t) => hay.includes(t));
+    }
     return true;
   });
+}
+
+const SEARCH_SYNONYMS: Record<string, string[]> = {
+  belly: ["abs", "core", "waist", "abdominals"],
+  stomach: ["abs", "core", "waist"],
+  "six pack": ["abs", "core", "waist"],
+  arms: ["biceps", "triceps", "forearms", "upper arms", "lower arms"],
+  butt: ["glutes", "glute"],
+  thighs: ["quads", "hamstrings", "upper legs"],
+  legs: ["quads", "hamstrings", "glutes", "calves", "upper legs", "lower legs"],
+  chest: ["pectorals", "push up", "bench", "chest"],
+  back: ["lats", "traps", "row", "pulldown", "back"],
+  home: ["body weight", "bodyweight"],
+  "no equipment": ["body weight"],
+  beginner: ["body weight", "assisted", "leverage machine"],
+  shoulder: ["delts", "shoulders"],
+  stretch: ["stretch", "mobility"],
+  mobility: ["stretch", "mobility"],
+  core: ["abs", "obliques", "waist"],
+};
+
+function expandSynonyms(query: string): string[] {
+  const terms = [query];
+  for (const [key, synonyms] of Object.entries(SEARCH_SYNONYMS)) {
+    if (query.includes(key)) {
+      terms.push(...synonyms);
+    }
+  }
+  return terms;
+}
+
+export function getBeginnerExercises(): Exercise[] {
+  const beginnerEquipment = ["body weight", "assisted", "leverage machine"];
+  return exercises
+    .filter((ex) => beginnerEquipment.includes(ex.equipment))
+    .slice(0, 12);
 }

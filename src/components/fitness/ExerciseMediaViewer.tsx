@@ -14,15 +14,18 @@ export function ExerciseMediaViewer({ exercise }: { exercise: Exercise }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white/5 border border-white/10">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={media.url}
-        alt={exercise.name}
-        className="w-full object-contain"
-        onError={() => setError(true)}
-        loading="lazy"
-      />
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f0d2e]">
+      <div className="flex items-center justify-center p-4" style={{ minHeight: "200px" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={media.url}
+          alt={exercise.name}
+          className="max-h-64 w-auto object-contain rounded-lg"
+          onError={() => setError(true)}
+          loading="lazy"
+        />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#0f0d2e] to-transparent" />
     </div>
   );
 }

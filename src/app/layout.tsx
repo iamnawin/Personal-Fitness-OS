@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   title: brand.productName,
   description: brand.appDescription,
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icon-192.png",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

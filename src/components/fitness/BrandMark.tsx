@@ -7,9 +7,14 @@ export function BrandMark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className={`${sizeClasses[size]} flex items-center justify-center rounded-xl bg-brand-accent`}>
-        <Dumbbell className="h-2/3 w-2/3 text-white" />
-      </div>
+      {brand.logoPath ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={brand.logoPath} alt={brand.productName} className={`${sizeClasses[size]} rounded-xl object-contain`} />
+      ) : (
+        <div className={`${sizeClasses[size]} flex items-center justify-center rounded-xl bg-brand-accent`}>
+          <Dumbbell className="h-2/3 w-2/3 text-white" />
+        </div>
+      )}
       <span className={`${textClasses[size]} font-bold text-white`}>
         {brand.productName}
       </span>

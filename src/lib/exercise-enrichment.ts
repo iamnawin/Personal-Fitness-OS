@@ -131,3 +131,24 @@ export function createSafetyNote(equipment: string, bodyPart: string): string {
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
+
+export function getDifficulty(equipment: string): "Beginner" | "Intermediate" | "Advanced" {
+  const eq = equipment.toLowerCase();
+  if (["body weight", "assisted", "band"].includes(eq)) return "Beginner";
+  if (["barbell", "olympic barbell", "trap_bar"].includes(eq)) return "Advanced";
+  return "Intermediate";
+}
+
+export function getShortUsefulFor(target: string, equipment: string): string {
+  const t = target.toLowerCase();
+  if (["quads", "glutes", "hamstrings"].includes(t)) return "Lower body strength";
+  if (["pectorals"].includes(t)) return "Chest development";
+  if (["lats", "traps", "upper back"].includes(t)) return "Back strength";
+  if (["delts"].includes(t)) return "Shoulder definition";
+  if (["biceps", "triceps", "forearms"].includes(t)) return "Arm strength";
+  if (["abs", "obliques"].includes(t)) return "Core stability";
+  if (t === "cardiovascular system") return "Cardio endurance";
+  if (["calves"].includes(t)) return "Calf development";
+  if (equipment.toLowerCase() === "body weight") return "Functional fitness";
+  return "General fitness";
+}
