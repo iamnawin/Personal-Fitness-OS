@@ -64,7 +64,9 @@ export default function DashboardPage() {
       {/* Quick links */}
       <div className="grid grid-cols-2 gap-3">
         <QuickLink href="/plan" label="View Plan" />
-        <QuickLink href="/coach" label="Update Profile" />
+        <QuickLink href="/exercises" label="Exercises" />
+        <QuickLink href="/builder" label="Build Workout" />
+        <QuickLink href="/progress" label="Progress" />
       </div>
     </div>
   );

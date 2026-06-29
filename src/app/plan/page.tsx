@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { WeeklyPlan } from "@/lib/types";
 import { getPlan, getProfile, getEquipment, savePlan } from "@/lib/workout-storage";
 import { generatePlan } from "@/lib/pfos-coach";
-import { CalendarDays, RefreshCw } from "lucide-react";
+import { CalendarDays, RefreshCw, Play } from "lucide-react";
 
 export default function PlanPage() {
   const router = useRouter();
@@ -82,16 +82,24 @@ export default function PlanPage() {
               )}
             </div>
             {!day.isRest && (
-              <ul className="mt-2 space-y-1">
-                {day.exercises.map((ex, i) => (
-                  <li key={i} className="flex justify-between text-sm text-white/70">
-                    <span>{ex.name}</span>
-                    <span className="text-white/40">
-                      {ex.sets}×{ex.reps}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul className="mt-2 space-y-1">
+                  {day.exercises.map((ex, i) => (
+                    <li key={i} className="flex justify-between text-sm text-white/70">
+                      <span>{ex.name}</span>
+                      <span className="text-white/40">
+                        {ex.sets}×{ex.reps}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={() => router.push(`/workout?source=plan:${day.day - 1}`)}
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand-electric/10 py-2 text-xs font-medium text-brand-electric hover:bg-brand-electric/20"
+                >
+                  <Play className="h-3 w-3" /> Start Workout
+                </button>
+              </>
             )}
           </div>
         ))}
