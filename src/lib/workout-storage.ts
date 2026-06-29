@@ -5,6 +5,7 @@ import {
   WorkoutLog,
   CustomWorkout,
   StreakData,
+  WeightEntry,
 } from "./types";
 
 const KEYS = {
@@ -14,6 +15,7 @@ const KEYS = {
   logs: "pfos:logs",
   customWorkouts: "pfos:custom-workouts",
   streak: "pfos:streak",
+  weightLog: "pfos:weight-log",
 } as const;
 
 function getItem<T>(key: string, fallback: T): T {
@@ -97,4 +99,22 @@ export function updateStreak() {
   streak.longest = Math.max(streak.longest, streak.current);
   streak.lastWorkoutDate = today;
   setItem(KEYS.streak, streak);
+}
+
+// Weight log
+export function getWeightLog(): WeightEntry[] {
+  return getItem<WeightEntry[]>(KEYS.weightLog, []);
+}
+export function saveWeightEntry(entry: WeightEntry) {
+  const log = getWeightLog();
+  log.push(entry);
+  setItem(KEYS.weightLog, log);
+}
+
+// Clear all data
+export function clearAllData() {
+  if (typeof window === "undefined") return;
+  Object.values(KEYS).forEach((key) => {
+    try { localStorage.removeItem(key); } catch { /* ignore */ }
+  });
 }

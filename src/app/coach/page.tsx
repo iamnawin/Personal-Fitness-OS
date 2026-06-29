@@ -22,6 +22,7 @@ const LEVELS: { value: ExperienceLevel; label: string; desc: string }[] = [
 
 export default function CoachPage() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [goal, setGoal] = useState<FitnessGoal>("general_fitness");
   const [level, setLevel] = useState<ExperienceLevel>("beginner");
   const [days, setDays] = useState(3);
@@ -35,6 +36,7 @@ export default function CoachPage() {
       daysPerWeek: days,
       sessionMinutes: duration,
       location: "mixed",
+      ...(name.trim() ? { name: name.trim() } : {}),
     };
     saveProfile(profile);
     router.push("/equipment");
@@ -57,6 +59,18 @@ export default function CoachPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Name */}
+        <div className="space-y-1.5">
+          <label className="text-sm font-medium text-white/80">Your name (optional)</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Naveen"
+            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-white/25 outline-none focus:border-brand-accent/50"
+          />
+        </div>
+
         {/* Goal */}
         <fieldset className="space-y-2">
           <legend className="text-sm font-medium text-white/80">What&apos;s your main goal?</legend>

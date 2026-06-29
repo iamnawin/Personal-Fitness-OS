@@ -8,6 +8,7 @@ export type FitnessProfile = {
   daysPerWeek: number;
   sessionMinutes: number;
   location: WorkoutLocation;
+  name?: string;
   age?: number;
   weight?: number;
 };
@@ -87,6 +88,13 @@ export type WorkoutLog = {
     repsPerSet: number[];
   }[];
   durationMinutes: number;
+  notes?: string;
+};
+
+export type WeightEntry = {
+  date: string;
+  weight: number;
+  unit: "kg" | "lbs";
 };
 
 export type StreakData = {

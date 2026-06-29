@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: "/plan", icon: CalendarDays, label: "Plan" },
   { href: "/exercises", icon: Dumbbell, label: "Exercises" },
   { href: "/progress", icon: TrendingUp, label: "Progress" },
-  { href: "/coach", icon: User, label: "Profile" },
+  { href: "/profile", icon: User, label: "Profile" },
 ];
 
 export function BottomNav() {
