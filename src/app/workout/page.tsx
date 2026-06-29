@@ -7,7 +7,7 @@ import { getPlan, getCustomWorkouts, saveLog, updateStreak } from "@/lib/workout
 import { getExerciseById } from "@/lib/exercise-data";
 import { ExerciseMediaViewer } from "@/components/fitness/ExerciseMediaViewer";
 import { ExerciseThumb } from "@/components/fitness/ExerciseThumb";
-import { getBodyPartLabel } from "@/lib/exercise-enrichment";
+import { getBodyPartLabel, createFormFocus } from "@/lib/exercise-enrichment";
 import { WorkoutLog } from "@/lib/types";
 
 type SessionExercise = { exerciseId: string; name: string; sets: number; reps: string; restSeconds: number };
@@ -134,6 +134,14 @@ function WorkoutContent() {
       {/* Exercise info */}
       <h2 className="text-lg font-bold text-white capitalize">{current.name}</h2>
       <p className="text-sm text-white/50">{current.sets} sets × {current.reps} reps · {current.restSeconds}s rest</p>
+
+      {/* Coach tip */}
+      {exercise && (
+        <div className="rounded-xl border border-brand-accent/20 bg-brand-accent/5 px-3 py-2">
+          <p className="text-[11px] text-white/40 uppercase tracking-wide mb-0.5">Coach tip</p>
+          <p className="text-xs text-white/70 leading-relaxed">{createFormFocus(exercise.target)}</p>
+        </div>
+      )}
 
       {/* Sets progress */}
       <div className="flex gap-1.5">

@@ -137,7 +137,9 @@ export default function ExercisesPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white">Exercise Library</h1>
-        <p className="text-sm text-white/50">Find movements by body area, goal, or equipment.</p>
+        <p className="text-sm text-white/50">
+          {getAllExercises().length.toLocaleString()} exercises in library · Beginner-friendly shown first
+        </p>
       </div>
 
       {/* Search */}

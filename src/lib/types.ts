@@ -45,6 +45,7 @@ export type PlanDay = {
   label: string;
   isRest: boolean;
   focus?: string;
+  shortNote?: string;
   exercises: PlanExercise[];
 };
 
