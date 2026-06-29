@@ -20,7 +20,7 @@ export function ExerciseMediaViewer({ exercise }: { exercise: Exercise }) {
         <img
           src={media.url}
           alt={exercise.name}
-          className="max-h-64 w-auto object-contain rounded-lg"
+          className="max-h-80 w-auto object-contain rounded-lg"
           onError={() => setError(true)}
           loading="lazy"
         />
