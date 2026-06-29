@@ -50,6 +50,7 @@ function WorkoutContent() {
   const [restTime, setRestTime] = useState(0);
   const [startTime] = useState(Date.now());
   const [finished, setFinished] = useState(false);
+  const [workoutNotes, setWorkoutNotes] = useState("");
 
   // Rest timer
   useEffect(() => {
@@ -73,10 +74,10 @@ function WorkoutContent() {
 
   if (finished) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center px-4">
         <Trophy className="h-14 w-14 text-brand-electric" />
         <h1 className="text-2xl font-bold text-white">Workout Complete!</h1>
-        <p className="text-sm text-white/60">{Math.round((Date.now() - startTime) / 60000)} min</p>
+        <p className="text-sm text-white/60">{Math.round((Date.now() - startTime) / 60000)} min · {exercises.length} exercises</p>
         <button onClick={() => router.push("/dashboard")} className="rounded-xl bg-brand-accent px-6 py-2.5 text-sm font-medium text-white">Back to Dashboard</button>
       </div>
     );
@@ -109,6 +110,7 @@ function WorkoutContent() {
       customWorkoutId: source?.startsWith("custom:") ? source.split(":")[1] : undefined,
       exercises: exercises.map((e, i) => ({ exerciseId: e.exerciseId, name: e.name, setsCompleted: completedSets[i]?.length || 0, repsPerSet: completedSets[i] || [] })),
       durationMinutes: Math.round((Date.now() - startTime) / 60000),
+      ...(workoutNotes.trim() ? { notes: workoutNotes.trim() } : {}),
     };
     saveLog(log);
     updateStreak();
@@ -198,9 +200,18 @@ function WorkoutContent() {
       )}
 
       {allDone && isLast && (
-        <button onClick={finishWorkout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 py-3 text-sm font-medium text-white">
-          <Trophy className="h-4 w-4" /> Finish Workout
-        </button>
+        <div className="space-y-3">
+          <textarea
+            value={workoutNotes}
+            onChange={(e) => setWorkoutNotes(e.target.value)}
+            placeholder="Add a note about today's workout (optional)"
+            rows={2}
+            className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-white placeholder-white/25 outline-none focus:border-brand-accent/50 resize-none"
+          />
+          <button onClick={finishWorkout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 py-3 text-sm font-medium text-white">
+            <Trophy className="h-4 w-4" /> Finish Workout
+          </button>
+        </div>
       )}
     </div>
   );

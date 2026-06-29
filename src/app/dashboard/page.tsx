@@ -52,7 +52,8 @@ export default function DashboardPage() {
   const isRestDay = todayPlan?.isRest;
   const { border, badge } = focusBadgeClass(isRestDay ? undefined : todayPlan?.focus);
 
-  const greeting = isRestDay ? "Rest day" : getGreeting();
+  const nameStr = profile?.name ? `, ${profile.name}` : "";
+  const greeting = isRestDay ? `Rest day${nameStr}` : `${getGreeting()}${nameStr}`;
   const subText = isRestDay
     ? "Recovery and hydration today."
     : plan
