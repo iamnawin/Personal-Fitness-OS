@@ -53,7 +53,7 @@ function FilterSelect({
     <select
       value={value}
       onChange={(e) => onSelect(e.target.value)}
-      className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-white/80 outline-none"
+      className="rounded-lg border border-white/10 bg-[#1e1b4b] px-2 py-1.5 text-xs text-white/80 outline-none [&>option]:bg-[#1e1b4b] [&>option]:text-white"
       aria-label={label}
     >
       <option value="">{label}</option>
