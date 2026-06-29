@@ -17,6 +17,7 @@ export type EquipmentPreferences = {
   location: WorkoutLocation;
   excludedBodyParts: string[];
   excludedExercises: string[];
+  focusMuscles?: string[];
 };
 
 export type Exercise = {
@@ -45,6 +46,7 @@ export type PlanDay = {
   label: string;
   isRest: boolean;
   focus?: string;
+  shortNote?: string;
   exercises: PlanExercise[];
 };
 

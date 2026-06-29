@@ -20,11 +20,23 @@ const EQUIPMENT_OPTIONS = [
 
 const BODY_PARTS = ["chest", "back", "shoulders", "upper arms", "upper legs", "waist", "cardio"];
 
+const FOCUS_MUSCLES = [
+  { label: "Chest", value: "pectorals" },
+  { label: "Back", value: "lats" },
+  { label: "Shoulders", value: "delts" },
+  { label: "Biceps", value: "biceps" },
+  { label: "Triceps", value: "triceps" },
+  { label: "Core / Abs", value: "abs" },
+  { label: "Legs", value: "quads" },
+  { label: "Glutes", value: "glutes" },
+];
+
 export default function EquipmentPage() {
   const router = useRouter();
   const [selected, setSelected] = useState<string[]>(["Body weight"]);
   const [location, setLocation] = useState<WorkoutLocation>("home");
   const [excluded, setExcluded] = useState<string[]>([]);
+  const [focusMuscles, setFocusMuscles] = useState<string[]>([]);
 
   function toggle(item: string, list: string[], setter: (v: string[]) => void) {
     setter(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
@@ -41,6 +53,7 @@ export default function EquipmentPage() {
       location,
       excludedBodyParts: excluded,
       excludedExercises: [],
+      focusMuscles,
     };
     saveEquipment(eq);
     const plan = generatePlan({ ...profile, location }, eq);
@@ -97,9 +110,31 @@ export default function EquipmentPage() {
         </div>
       </fieldset>
 
+      {/* Focus muscles */}
+      <fieldset className="space-y-2">
+        <legend className="text-sm font-medium text-white/80">Which muscles to focus on? <span className="text-white/40 font-normal">(optional)</span></legend>
+        <p className="text-xs text-white/40">Select what you most want to train. Your plan will prioritize these.</p>
+        <div className="flex flex-wrap gap-2">
+          {FOCUS_MUSCLES.map(({ label, value }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => toggle(value, focusMuscles, setFocusMuscles)}
+              className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                focusMuscles.includes(value)
+                  ? "border-brand-accent bg-brand-accent/20 text-white"
+                  : "border-white/10 text-white/60 hover:border-white/30"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
       {/* Excluded body parts */}
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium text-white/80">Avoid these body parts (optional)</legend>
+        <legend className="text-sm font-medium text-white/80">Avoid these body parts <span className="text-white/40 font-normal">(optional)</span></legend>
         <div className="flex flex-wrap gap-2">
           {BODY_PARTS.map((bp) => (
             <button

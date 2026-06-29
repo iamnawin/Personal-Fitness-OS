@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Dumbbell, CalendarDays, LayoutDashboard } from "lucide-react";
+import { Home, Dumbbell, CalendarDays, TrendingUp, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/dashboard", icon: Home, label: "Home" },
   { href: "/plan", icon: CalendarDays, label: "Plan" },
   { href: "/exercises", icon: Dumbbell, label: "Exercises" },
-  { href: "/", icon: Home, label: "Home" },
+  { href: "/progress", icon: TrendingUp, label: "Progress" },
+  { href: "/coach", icon: User, label: "Profile" },
 ];
 
 export function BottomNav() {
@@ -19,7 +20,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-brand-primary/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-md items-center justify-around py-2">
         {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
-          const active = pathname === href;
+          const active = pathname === href || (href === "/dashboard" && pathname === "/");
           return (
             <Link
               key={href}

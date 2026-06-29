@@ -17,6 +17,9 @@ import {
   createFormFocus,
   createCommonMistake,
   createSafetyNote,
+  getSimpleTargetExplanation,
+  getBeginnerHowTo,
+  getHomeAlternative,
 } from "@/lib/exercise-enrichment";
 
 type Tab = "overview" | "howto" | "safety";
@@ -38,6 +41,9 @@ export default function ExerciseDetailPage() {
   const description = createSimpleDescription(exercise.name, exercise.target, exercise.bodyPart);
   const usefulFor = createUsefulFor(exercise.target, exercise.bodyPart);
   const difficulty = getDifficulty(exercise.equipment);
+  const targetExplanation = getSimpleTargetExplanation(exercise.target);
+  const beginnerHowTo = getBeginnerHowTo(exercise.target, exercise.equipment);
+  const homeAlt = getHomeAlternative(exercise.equipment, exercise.target);
 
   return (
     <div className="pb-20 space-y-4">
@@ -75,9 +81,15 @@ export default function ExerciseDetailPage() {
       {/* Tab content */}
       {tab === "overview" && (
         <div className="space-y-4">
+          {/* What it trains — plain English */}
+          <div className="rounded-xl border border-brand-electric/20 bg-brand-electric/5 p-4">
+            <h3 className="text-xs font-medium text-white/50 uppercase mb-2">What It Trains</h3>
+            <p className="text-sm text-white/80 leading-relaxed">{targetExplanation}</p>
+          </div>
+
           {/* Useful for */}
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <h3 className="text-xs font-medium text-white/50 uppercase mb-2">Useful For</h3>
+            <h3 className="text-xs font-medium text-white/50 uppercase mb-2">Good For</h3>
             <div className="flex flex-wrap gap-1.5">
               {usefulFor.map((t) => (
                 <span key={t} className="rounded-md bg-brand-accent/20 px-2 py-0.5 text-xs text-brand-electric">{t}</span>
@@ -88,8 +100,16 @@ export default function ExerciseDetailPage() {
           {/* Secondary muscles */}
           {exercise.secondaryMuscles.length > 0 && (
             <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-              <h3 className="text-xs font-medium text-white/50 uppercase mb-2">Secondary Muscles</h3>
+              <h3 className="text-xs font-medium text-white/50 uppercase mb-2">Also Works</h3>
               <p className="text-sm text-white/70">{exercise.secondaryMuscles.map(getMuscleLabel).join(", ")}</p>
+            </div>
+          )}
+
+          {/* Home alternative */}
+          {homeAlt && (
+            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <h3 className="text-xs font-medium text-white/50 uppercase mb-2">No Equipment?</h3>
+              <p className="text-sm text-white/70">{homeAlt}</p>
             </div>
           )}
         </div>
@@ -97,7 +117,13 @@ export default function ExerciseDetailPage() {
 
       {tab === "howto" && (
         <div className="space-y-4">
-          {/* Instructions */}
+          {/* Simple how-to in plain English */}
+          <div className="rounded-xl border border-brand-electric/20 bg-brand-electric/5 p-4">
+            <h3 className="text-xs font-medium text-white/50 uppercase mb-2">How To Do It</h3>
+            <p className="text-sm text-white/80 leading-relaxed">{beginnerHowTo}</p>
+          </div>
+
+          {/* Instructions from dataset */}
           {exercise.instructions && exercise.instructions.length > 0 && (
             <div className="space-y-2">
               {exercise.instructions.map((step, i) => (
