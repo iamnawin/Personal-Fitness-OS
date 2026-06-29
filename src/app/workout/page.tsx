@@ -1,0 +1,173 @@
+"use client";
+
+import { Suspense, useState, useEffect, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Check, Timer, Trophy } from "lucide-react";
+import { getPlan, getCustomWorkouts, saveLog, updateStreak } from "@/lib/workout-storage";
+import { getExerciseById } from "@/lib/exercise-data";
+import { ExerciseMediaViewer } from "@/components/fitness/ExerciseMediaViewer";
+import { WorkoutLog } from "@/lib/types";
+
+type SessionExercise = { exerciseId: string; name: string; sets: number; reps: string; restSeconds: number };
+
+export default function WorkoutPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center text-white/40">Loading...</div>}>
+      <WorkoutContent />
+    </Suspense>
+  );
+}
+
+function WorkoutContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const source = searchParams.get("source"); // "plan:dayIndex" or "custom:workoutId"
+
+  const exercises = useMemo<SessionExercise[]>(() => {
+    if (!source) return [];
+    if (source.startsWith("plan:")) {
+      const dayIdx = parseInt(source.split(":")[1]);
+      const plan = getPlan();
+      if (!plan) return [];
+      const day = plan.days[dayIdx];
+      if (!day || day.isRest) return [];
+      return day.exercises.map((e) => ({ exerciseId: e.exerciseId, name: e.name, sets: e.sets, reps: e.reps, restSeconds: e.restSeconds }));
+    }
+    if (source.startsWith("custom:")) {
+      const id = source.split(":")[1];
+      const custom = getCustomWorkouts().find((w) => w.id === id);
+      if (!custom) return [];
+      return custom.exercises.map((e) => ({ exerciseId: e.exerciseId, name: e.name, sets: e.sets, reps: e.reps, restSeconds: e.restSeconds }));
+    }
+    return [];
+  }, [source]);
+
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [completedSets, setCompletedSets] = useState<number[][]>(() => exercises.map(() => []));
+  const [resting, setResting] = useState(false);
+  const [restTime, setRestTime] = useState(0);
+  const [startTime] = useState(Date.now());
+  const [finished, setFinished] = useState(false);
+
+  // Rest timer
+  useEffect(() => {
+    if (!resting || restTime <= 0) return;
+    const t = setTimeout(() => setRestTime((r) => r - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resting, restTime]);
+
+  useEffect(() => {
+    if (resting && restTime <= 0) setResting(false);
+  }, [resting, restTime]);
+
+  if (exercises.length === 0) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <p className="text-white/60">No workout loaded.</p>
+        <button onClick={() => router.push("/plan")} className="text-sm text-brand-electric">Go to Plan</button>
+      </div>
+    );
+  }
+
+  if (finished) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
+        <Trophy className="h-14 w-14 text-brand-electric" />
+        <h1 className="text-2xl font-bold text-white">Workout Complete!</h1>
+        <p className="text-sm text-white/60">{Math.round((Date.now() - startTime) / 60000)} min</p>
+        <button onClick={() => router.push("/dashboard")} className="rounded-xl bg-brand-accent px-6 py-2.5 text-sm font-medium text-white">Back to Dashboard</button>
+      </div>
+    );
+  }
+
+  const current = exercises[currentIdx];
+  const exercise = getExerciseById(current.exerciseId);
+  const setsCompleted = completedSets[currentIdx]?.length || 0;
+
+  function completeSet() {
+    const reps = parseInt(current.reps) || 0;
+    setCompletedSets((prev) => prev.map((s, i) => (i === currentIdx ? [...s, reps] : s)));
+    if (setsCompleted + 1 < current.sets) {
+      setResting(true);
+      setRestTime(current.restSeconds);
+    }
+  }
+
+  function nextExercise() {
+    if (currentIdx < exercises.length - 1) {
+      setCurrentIdx((i) => i + 1);
+    }
+  }
+
+  function finishWorkout() {
+    const log: WorkoutLog = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      planDayIndex: source?.startsWith("plan:") ? parseInt(source.split(":")[1]) : undefined,
+      customWorkoutId: source?.startsWith("custom:") ? source.split(":")[1] : undefined,
+      exercises: exercises.map((e, i) => ({ exerciseId: e.exerciseId, name: e.name, setsCompleted: completedSets[i]?.length || 0, repsPerSet: completedSets[i] || [] })),
+      durationMinutes: Math.round((Date.now() - startTime) / 60000),
+    };
+    saveLog(log);
+    updateStreak();
+    setFinished(true);
+  }
+
+  const allDone = setsCompleted >= current.sets;
+  const isLast = currentIdx === exercises.length - 1;
+
+  return (
+    <div className="space-y-4">
+      {/* Progress bar */}
+      <div className="flex items-center gap-2">
+        <div className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
+          <div className="h-full bg-brand-electric transition-all" style={{ width: `${((currentIdx + (allDone ? 1 : 0)) / exercises.length) * 100}%` }} />
+        </div>
+        <span className="text-xs text-white/40">{currentIdx + 1}/{exercises.length}</span>
+      </div>
+
+      {/* Media */}
+      {exercise && <ExerciseMediaViewer exercise={exercise} />}
+
+      {/* Exercise info */}
+      <h2 className="text-lg font-bold text-white capitalize">{current.name}</h2>
+      <p className="text-sm text-white/50">{current.sets} sets × {current.reps} reps · {current.restSeconds}s rest</p>
+
+      {/* Sets progress */}
+      <div className="flex gap-1.5">
+        {Array.from({ length: current.sets }).map((_, i) => (
+          <div key={i} className={`h-2 flex-1 rounded-full ${i < setsCompleted ? "bg-brand-electric" : "bg-white/10"}`} />
+        ))}
+      </div>
+
+      {/* Rest timer */}
+      {resting && (
+        <div className="flex flex-col items-center gap-2 rounded-xl border border-brand-electric/30 bg-brand-electric/5 p-4">
+          <Timer className="h-6 w-6 text-brand-electric" />
+          <span className="text-2xl font-bold text-white">{restTime}s</span>
+          <span className="text-xs text-white/40">Rest</span>
+          <button onClick={() => { setResting(false); setRestTime(0); }} className="text-xs text-brand-electric">Skip</button>
+        </div>
+      )}
+
+      {/* Actions */}
+      {!resting && !allDone && (
+        <button onClick={completeSet} className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-accent py-3 text-sm font-medium text-white">
+          <Check className="h-4 w-4" /> Complete Set {setsCompleted + 1}
+        </button>
+      )}
+
+      {allDone && !isLast && (
+        <button onClick={nextExercise} className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-electric py-3 text-sm font-medium text-white">
+          Next Exercise →
+        </button>
+      )}
+
+      {allDone && isLast && (
+        <button onClick={finishWorkout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 py-3 text-sm font-medium text-white">
+          <Trophy className="h-4 w-4" /> Finish Workout
+        </button>
+      )}
+    </div>
+  );
+}
