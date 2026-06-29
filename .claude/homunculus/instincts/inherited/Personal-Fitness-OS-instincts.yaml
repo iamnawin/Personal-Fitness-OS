@@ -1,0 +1,357 @@
+# Instincts generated from https://github.com/iamnawin/Personal-Fitness-OS
+# Generated: 2026-06-29T17:41:30.612Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: Personal-Fitness-OS-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: fix
+
+## Evidence
+
+- 1 commits analyzed
+- Detected conventional commit pattern
+- Examples: fix: restructure PFOS plan logic and beginner exercise UX
+
+---
+id: Personal-Fitness-OS-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Commit Length
+
+## Action
+
+Write moderate-length commit messages (~57 characters)
+
+## Evidence
+
+- Average commit message length: 57 chars
+- Based on 1 commits
+
+---
+id: Personal-Fitness-OS-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Naming Files
+
+## Action
+
+Use camelCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: camelCase
+
+---
+id: Personal-Fitness-OS-import-alias
+trigger: "when importing modules"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Import Alias
+
+## Action
+
+Use path aliases (@/, ~/) instead of relative imports
+
+## Evidence
+
+- Import analysis shows alias pattern
+- Example: import { x } from '@/lib/x'
+
+---
+id: Personal-Fitness-OS-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: Personal-Fitness-OS-arch-type-based
+trigger: "when adding new code"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Arch Type Based
+
+## Action
+
+Place code in the appropriate type folder (components/, services/, utils/, etc.)
+
+## Evidence
+
+- Type-based module organization detected
+- Folders: app, components, lib
+
+---
+id: Personal-Fitness-OS-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness OS Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: personal-fitness-os-instinct-file-naming
+trigger: "When creating a new file in the codebase"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct File Naming
+
+## Action
+
+Name the file using camelCase
+
+## Evidence
+
+- Pattern in namingConventions.files
+
+---
+id: personal-fitness-os-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Function Naming
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern in namingConventions.functions
+
+---
+id: personal-fitness-os-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern in namingConventions.classes
+
+---
+id: personal-fitness-os-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern in namingConventions.constants
+
+---
+id: personal-fitness-os-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Import Style
+
+## Action
+
+Use alias import style
+
+## Evidence
+
+- Pattern in importStyle
+
+---
+id: personal-fitness-os-instinct-export-style
+trigger: "When exporting modules or functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in exportStyle
+
+---
+id: personal-fitness-os-instinct-git-commit-format
+trigger: "When making a git commit"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Git Commit Format
+
+## Action
+
+Format the commit message using the conventional commit style with a prefix (e.g., 'fix: ')
+
+## Evidence
+
+- Pattern in commits.prefixes
+- Seen in commit 'fix: restructure PFOS plan logic and beginner exercise UX'
+
+---
+id: personal-fitness-os-instinct-git-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Git Commit Length
+
+## Action
+
+Keep the commit message concise, around 57 characters on average
+
+## Evidence
+
+- Pattern in commits.averageLength
+
+---
+id: personal-fitness-os-instinct-test-location
+trigger: "When adding or updating tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Test Location
+
+## Action
+
+Place test files in a separate location from source files
+
+## Evidence
+
+- Pattern in architecture.folderStructure.testLocation
+
+---
+id: personal-fitness-os-instinct-folder-structure
+trigger: "When adding new code modules"
+confidence: 0.9
+domain: architecture
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Folder Structure
+
+## Action
+
+Organize code into 'app', 'components', and 'lib' folders under 'src'
+
+## Evidence
+
+- Pattern in architecture.folderStructure.srcLayout
+
+---
+id: personal-fitness-os-instinct-module-organization
+trigger: "When structuring modules"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: iamnawin/Personal-Fitness-OS
+---
+
+# Personal Fitness Os Instinct Module Organization
+
+## Action
+
+Organize modules by type
+
+## Evidence
+
+- Pattern in architecture.moduleOrganization
+
