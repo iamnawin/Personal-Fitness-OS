@@ -245,6 +245,134 @@ const INTERMEDIATE_4DAY: DayTemplate[] = [
   },
 ];
 
+// ---- 5-DAY BEGINNER ----
+const BEGINNER_5DAY: DayTemplate[] = [
+  {
+    focus: "Full Body Basics",
+    shortNote: "Start the week with simple movements covering every muscle group.",
+    slots: [
+      { targets: ["quads", "glutes"] },
+      { targets: ["pectorals"] },
+      { targets: ["lats"] },
+      { targets: ["abs"] },
+      { targets: ["calves"] },
+      { targets: ["delts"] },
+    ],
+  },
+  {
+    focus: "Upper Body Push",
+    shortNote: "Chest, shoulders, and triceps with beginner-safe movements.",
+    slots: [
+      { targets: ["pectorals"] },
+      { targets: ["pectorals"] },
+      { targets: ["delts"] },
+      { targets: ["delts"] },
+      { targets: ["triceps"] },
+      { targets: ["abs"] },
+    ],
+  },
+  {
+    focus: "Core + Mobility",
+    shortNote: "Core work and mobility to support every other workout.",
+    slots: [
+      { targets: ["abs"] },
+      { targets: ["obliques"] },
+      { targets: ["abs"] },
+      { targets: ["glutes"] },
+      { targets: ["spine", "abs"] },
+      { targets: ["calves"] },
+    ],
+  },
+  {
+    focus: "Upper Body Pull",
+    shortNote: "Back, biceps, and rear delts for a strong pulling base.",
+    slots: [
+      { targets: ["lats"] },
+      { targets: ["lats"] },
+      { targets: ["traps"] },
+      { targets: ["biceps"] },
+      { targets: ["abs"] },
+      { targets: ["traps"] },
+    ],
+  },
+  {
+    focus: "Lower Body",
+    shortNote: "Legs and glutes to finish the week strong.",
+    slots: [
+      { targets: ["quads"] },
+      { targets: ["glutes"] },
+      { targets: ["hamstrings"] },
+      { targets: ["calves"] },
+      { targets: ["abs", "obliques"] },
+      { targets: ["adductors", "quads"] },
+    ],
+  },
+];
+
+// ---- 5-DAY INTERMEDIATE ----
+const INTERMEDIATE_5DAY: DayTemplate[] = [
+  {
+    focus: "Push",
+    shortNote: "Chest, shoulders, triceps. Focus on controlled pressing strength.",
+    slots: [
+      { targets: ["pectorals"] },
+      { targets: ["pectorals"] },
+      { targets: ["delts"] },
+      { targets: ["delts"] },
+      { targets: ["triceps"] },
+      { targets: ["abs"] },
+    ],
+  },
+  {
+    focus: "Pull",
+    shortNote: "Back, biceps, and rear delts. Build pulling strength and posture.",
+    slots: [
+      { targets: ["lats"] },
+      { targets: ["lats"] },
+      { targets: ["traps"] },
+      { targets: ["biceps"] },
+      { targets: ["biceps"] },
+      { targets: ["abs"] },
+    ],
+  },
+  {
+    focus: "Legs",
+    shortNote: "Quads, glutes, hamstrings, then calves. One calf — balanced leg day.",
+    slots: [
+      { targets: ["quads"] },
+      { targets: ["quads"] },
+      { targets: ["glutes"] },
+      { targets: ["hamstrings"] },
+      { targets: ["calves"] },
+      { targets: ["abs"] },
+    ],
+  },
+  {
+    focus: "Upper Accessory",
+    shortNote: "Volume day — chest, back, shoulders, arms for muscle growth.",
+    slots: [
+      { targets: ["pectorals"] },
+      { targets: ["lats"] },
+      { targets: ["delts"] },
+      { targets: ["biceps"] },
+      { targets: ["triceps"] },
+      { targets: ["traps"] },
+    ],
+  },
+  {
+    focus: "Core + Conditioning",
+    shortNote: "Abs, obliques, glutes, and light conditioning to finish the week.",
+    slots: [
+      { targets: ["abs"] },
+      { targets: ["obliques"] },
+      { targets: ["abs"] },
+      { targets: ["glutes"] },
+      { targets: ["calves"] },
+      { targets: ["obliques", "abs"] },
+    ],
+  },
+];
+
 // ---- 5-DAY ADVANCED ----
 const ADVANCED_5DAY: DayTemplate[] = [
   {
@@ -313,6 +441,9 @@ function getDayTemplates(profile: FitnessProfile): DayTemplate[] {
   const { daysPerWeek, level } = profile;
   if (daysPerWeek <= 3) return level === "beginner" ? BEGINNER_3DAY : INTERMEDIATE_3DAY;
   if (daysPerWeek === 4) return level === "beginner" ? BEGINNER_4DAY : INTERMEDIATE_4DAY;
+  // 5+ days: level-aware templates
+  if (level === "beginner") return BEGINNER_5DAY;
+  if (level === "intermediate") return INTERMEDIATE_5DAY;
   return ADVANCED_5DAY;
 }
 
@@ -328,11 +459,21 @@ function pickSlotsForDay(
   excludedBP: string[],
   exerciseCount: number,
   usedIds: Set<string>,
-  isBeginnerPlan: boolean
+  isBeginnerPlan: boolean,
+  focusMuscles: string[] = []
 ): Exercise[] {
   const selected: Exercise[] = [];
+
+  // Boost focused muscle slots to the front so they get picked first
+  let slots = template.slots;
+  if (focusMuscles.length > 0) {
+    const focused = slots.filter((s) => s.targets.some((t) => focusMuscles.includes(t)));
+    const rest = slots.filter((s) => !s.targets.some((t) => focusMuscles.includes(t)));
+    slots = [...focused, ...rest];
+  }
+
   // Always try at least 4 slots even if exerciseCount < 4 (ensures variety)
-  const slotsToUse = template.slots.slice(0, Math.max(exerciseCount, 4));
+  const slotsToUse = slots.slice(0, Math.max(exerciseCount, 4));
 
   for (const slot of slotsToUse) {
     if (selected.length >= exerciseCount) break;
@@ -418,7 +559,8 @@ export function generatePlan(profile: FitnessProfile, equipment: EquipmentPrefer
     const template = templates[templateIdx % templates.length];
     const picked = pickSlotsForDay(
       template, availableEq, equipment.excludedBodyParts,
-      exercisesPerDay, usedIds, isBeginnerPlan
+      exercisesPerDay, usedIds, isBeginnerPlan,
+      equipment.focusMuscles ?? []
     );
     return {
       day: i + 1,

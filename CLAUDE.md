@@ -9,7 +9,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Product:** Personal Fitness OS (PFOS)  
 **Tagline:** A personal workout plan built around you.  
 **Internal codename:** PFOS  
-**Status:** Pre-implementation — design spec approved, no code yet.
+**Status:** Implementation complete through Phase 4. Phase 5 (polish) in progress.
+
+### Current Implementation Status
+
+| Phase | Status | Notes |
+|---|---|---|
+| Phase 1 — Core Loop | ✓ Complete | brand → types → localStorage → onboarding → coach → equipment → plan → dashboard |
+| Phase 2 — Exercise Content | ✓ Complete | ~1,300 exercises bundled, search/filters, detail with GIF viewer, Indian-friendly enrichment |
+| Phase 3 — Workout Execution | ✓ Complete | builder, active session with rest timer, log save, streak update |
+| Phase 4 — Progress | ✓ Complete | history, streak, weekly summary |
+| Phase 5 — Polish | In Progress | beginner curation ✓, nav cleanup ✓, focus muscles ✓, PWA pending, static export pending |
+
+### Key Architecture Decisions Made
+
+- **Plan generator**: Slot-based picking in `pfos-coach.ts`. Each day template has ordered `MuscleSlot[]` — first matching target wins. Guarantees balance (e.g. Legs day: 1 quad + 1 glute + 1 hamstring + 1 calf + 1 core, never all-calves).
+- **Beginner safety**: `filterBeginnerSafe()` in pfos-coach restricts to bodyweight/dumbbell/assisted equipment and filters out advanced movement names.
+- **Focus muscles**: `EquipmentPreferences.focusMuscles` — selected muscles are boosted to front of slot order during plan generation.
+- **Broken plan auto-fix**: `isValidPlan()` exported from pfos-coach. Plan page calls it on mount and auto-regenerates if any workout day has 0 exercises.
+- **Nav**: 5 items — Home (`/dashboard`), Plan, Exercises, Progress, Profile (`/coach`). No duplicate Dashboard/Home.
 
 The original PRD used the name "Yutra". That name is **retired**. Never use it anywhere.  
 All product naming must come from `src/lib/brand.ts` — never hardcoded.

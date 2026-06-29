@@ -17,6 +17,7 @@ export type EquipmentPreferences = {
   location: WorkoutLocation;
   excludedBodyParts: string[];
   excludedExercises: string[];
+  focusMuscles?: string[];
 };
 
 export type Exercise = {
